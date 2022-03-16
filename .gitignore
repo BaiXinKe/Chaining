@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# vscode setting file
+.vscode/*
+
+# cmake building file
+build/*
