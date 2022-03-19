@@ -1,9 +1,12 @@
 #ifndef CHAINING_BASE_ERRORMSG_HPP__
 #define CHAINING_BASE_ERRORMSG_HPP__
 
+#include <cerrno>
 #include <cstring>
 #include <string>
 #include <string_view>
+
+#include <iostream>
 
 namespace Chaining {
 namespace auxiliary {
@@ -14,8 +17,9 @@ namespace auxiliary {
         std::string msg { func };
         msg += ": ";
 
-        if (strerror_r(err, buf, sizeof(buf)) != nullptr) {
-            msg += std::string(buf, strlen(buf));
+        char* ret = ::strerror_r(err, buf, sizeof(buf));
+        if (ret != nullptr) {
+            msg += std::string(ret, strlen(ret));
         } else {
             msg += "Unknown";
         }

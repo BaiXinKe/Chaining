@@ -1,8 +1,12 @@
 {
     "logger":{
-        "mode": "plain",
+        "level": "debug",
         "base_log_name": "log/log",
-        "max_log_file_size": "1G",
-        "rotate_file_number": 5
+        "out2std": true,
+        "only2std": false,
+        "max_size": "1G",
+        "max_files": 5,
+        "flush_every_s": 1, 
+        "async_buffer_size": 8192
     }
 }
