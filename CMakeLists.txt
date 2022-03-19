@@ -10,17 +10,15 @@ set(CMAKE_C_STANDARD_REQUIRED 11)
 
 set(SRC_ROOT_DIR src)
 
-set(SOURCE ${SRC_ROOT_DIR}/main.cpp)
+set(SOURCE ${SRC_ROOT_DIR}/main.cpp ${SRC_ROOT_DIR}/auxiliary/ReadSetting.cpp)
 
 add_executable(Chaining  ${SOURCE})
 
 target_compile_options(Chaining PRIVATE "-fcoroutines" )
 
-add_subdirectory(${SRC_ROOT_DIR})
-
 # ---------------- link local libary ------------------------ #
 
-target_link_libraries(Chaining base_library)
+
 
 
 # ---------------- link package ----------------------------- #
@@ -47,8 +45,10 @@ else()
     message (FATAL_ERROR "GTest Not Found")
 endif()
 
+add_executable(convertTest ${TESTING_SOURCE_DIR}/convertTest.cpp ${SRC_ROOT_DIR}/auxiliary/ReadSetting.cpp)
+target_link_libraries(convertTest GTest::GTest GTest::Main)
 
-add_test(test_all utest)
+add_test(test_all utest convertTest)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

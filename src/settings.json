@@ -1,0 +1,8 @@
+{
+    "logger":{
+        "mode": "plain",
+        "base_log_name": "log/log",
+        "max_log_file_size": "1G",
+        "rotate_file_number": 5
+    }
+}
