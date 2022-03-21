@@ -10,11 +10,18 @@ set(CMAKE_C_STANDARD_REQUIRED 11)
 
 set(SRC_ROOT_DIR src)
 
+add_subdirectory(src)
+
 set(SOURCE ${SRC_ROOT_DIR}/main.cpp 
             ${SRC_ROOT_DIR}/auxiliary/ReadSetting.cpp
             ${SRC_ROOT_DIR}/auxiliary/InitLogger.cpp)
 
 add_executable(Chaining  ${SOURCE})
+
+
+
+target_include_directories(Chaining PRIVATE src)
+
 
 target_compile_options(Chaining PRIVATE "-fcoroutines" )
 

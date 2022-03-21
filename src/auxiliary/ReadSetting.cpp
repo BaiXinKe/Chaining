@@ -14,7 +14,7 @@ nlohmann::json settings::parserSetting(std::string_view setting)
 
     std::ifstream setting_file { std::string(setting), std::ios::in };
     if (!setting_file.is_open()) {
-        std::string msg { GetErrorMsg() };
+        std::string msg { GetErrorMsg(errno) };
         throw std::runtime_error { msg };
     }
 
@@ -34,7 +34,7 @@ size_t settings::GetUnitConversionValue(std::string_view capacity)
     char* numEnd { nullptr };
     long capacityNum { std::strtol(capacity.data(), &numEnd, 10) };
     if (capacityNum == -1) {
-        std::string eMsg { GetErrorMsg() };
+        std::string eMsg { GetErrorMsg(errno) };
         throw std::runtime_error { "GetUnitConversionValue Error: " + eMsg };
     }
 

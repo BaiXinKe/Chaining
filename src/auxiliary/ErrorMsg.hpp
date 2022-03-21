@@ -27,9 +27,9 @@ namespace auxiliary {
         return msg;
     }
 
-#define GetErrorMsg() errorMsg(__FUNCTION__, (errno))
-
 }
 }
+#define GetErrorMsg(err) \
+    Chaining::auxiliary::errorMsg(__FUNCTION__, (err))
 
 #endif

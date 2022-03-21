@@ -76,7 +76,7 @@ bool InitLogger::initLogger(nlohmann::json log_settings)
         logger->set_level(level);
     }
 
-    auto logger = std::make_shared<spdlog::async_logger>("main_logger", sinks_.begin(), sinks_.end(),
+    auto logger = std::make_shared<spdlog::async_logger>("Chaining", sinks_.begin(), sinks_.end(),
         spdlog::thread_pool(), spdlog::async_overflow_policy::overrun_oldest);
 
     spdlog::set_default_logger(logger);
