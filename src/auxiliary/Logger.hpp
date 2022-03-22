@@ -12,10 +12,8 @@ namespace auxiliary {
 #define ChainLogWarning(...) SPDLOG_WARN(__VA_ARGS__)
 #define ChainLogError(...) SPDLOG_ERROR(__VA_ARGS__)
 
-#define ChainLogFatal(...)           \
-    do {                             \
-        SPDLOG_CRITICAL(__VA_ARGS__) \
-    } while (0)
+#define ChainLogFatal(...) SPDLOG_CRITICAL(__VA_ARGS__)
+
 }
 }
 

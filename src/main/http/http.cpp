@@ -1,6 +1,63 @@
-#include "http.hpp"
+#include <cstring>
+
+#include "main/http/http.hpp"
+
+#include "main/Buffer.hpp"
 
 using namespace Chaining::net::Http;
+
+// ------------------------------- Request -------------------------------------------//
+
+HttpRequest::HttpRequest()
+    : parseState_ { ParseStatus::RequestLine }
+{
+}
+
+HttpRequest::ParseStatus
+HttpRequest::parseLine(std::string_view line)
+{
+    if (parseState_ == ParseStatus::HeaderLine) {
+        return parseHeaderLine(line);
+    } else if (parseState_ == ParseStatus::RequestLine) {
+        return parseRequestLine(line);
+    }
+    return parseState_;
+}
+
+HttpRequest::ParseStatus
+HttpRequest::parseHeaderLine(std::string_view line)
+{
+    static const std::unordered_map<std::string, Method> str2Method {
+        { "GET", Method::GET }, { "PUT", Method::PUT }, { "POST", Method::POST },
+        { "HEAD", Method::HEAD }, { "TRACE", Method::TRACE }, { "DELETE", Method::DELETE },
+        { "OPTIONS", Method::OPTIONS }, { "CONNECT", Method::CONNECT }, { "OTHER", Method::OTHER }
+    };
+
+    const char* str = line.data();
+    const char* space = ::strchr(str, ' ');
+    if (space == nullptr) {
+        return ParseStatus::Error;
+    }
+    space = '\0';
+    space++;
+
+    std::string method { str, ::strlen(str) };
+    if (str2Method.find(method) != std::end(str2Method)) {
+        requestLine_.setMethod(str2Method.at(method));
+    } else {
+        requestLine_.setMethod(str2Method.at("OTHER"));
+    }
+
+    if (requestLine_.method == Method::OTHER)
+        return ParseStatus::Error;
+}
+
+HttpRequest::ParseStatus
+HttpRequest::parseRequestLine(std::string_view line)
+{
+}
+
+//----------------------------------- Response ---------------------------------------//
 
 std::string HttpResponse::StatusLine::StatusCode2Message(StatusCode code)
 {
@@ -72,6 +129,7 @@ HttpResponse::StatusLine& HttpResponse::StatusLine::setCode(StatusCode c)
 
 HttpResponse::HttpResponse()
     : statusLine_ { Version::v11, StatusCode::c200, StatusLine::StatusCode2Message(StatusCode::c200) }
+    , useBody_ { false }
 {
 }
 
@@ -85,4 +143,49 @@ HttpResponse& HttpResponse::setStatusCode(StatusCode code)
 {
     statusLine_.setCode(code);
     return *this;
+}
+
+HttpResponse& HttpResponse::setBody(std::string_view str)
+{
+    this->body_ = str;
+    useBody_ = true;
+}
+
+void HttpResponse::StatusLine::Serilization(Buffer* buff)
+{
+    switch (version) {
+    case Version::v09: {
+        buff->append("HTTP/0.9");
+        break;
+    }
+    case Version::v10: {
+        buff->append("HTTP/1.0");
+        break;
+    }
+    default: {
+        buff->append("HTTP/1.1");
+        break;
+    }
+    };
+
+    buff->append(" ");
+    buff->append(std::to_string(static_cast<uint16_t>(code)));
+    buff->append(" ");
+    buff->append(statusMessage);
+    buff->append("\r\n");
+}
+
+void HttpResponse::Serialization(Buffer* buff)
+{
+    this->statusLine_.Serilization(buff);
+    for (auto&& req_line : requestHeader_) {
+        buff->append(req_line.first);
+        buff->append(": ");
+        buff->append(req_line.second);
+        buff->append("\r\n");
+    }
+    buff->append("\r\n");
+
+    if (useBody_)
+        buff->append(body_);
 }

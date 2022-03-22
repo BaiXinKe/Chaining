@@ -1,6 +1,9 @@
 #include "main/Buffer.hpp"
+#include "auxiliary/Logger.hpp"
+
 #include <cassert>
 #include <cstring>
+#include <sys/uio.h>
 
 using namespace Chaining::net;
 
@@ -104,4 +107,30 @@ char* Buffer::findCRLFDouble()
 {
     return const_cast<char*>(
         const_cast<const Buffer*>(this)->findCRLFDouble());
+}
+
+ssize_t Buffer::readFromFD(Handler fd)
+{
+    static char tmpBuff[65536] {};
+    struct iovec iov[2] {};
+    iov[0].iov_base = this->begin2Write();
+    iov[0].iov_len = this->canWriteableDirection();
+    iov[1].iov_base = tmpBuff;
+    iov[1].iov_len = sizeof(tmpBuff);
+
+    ssize_t iovReadRet { ::readv(fd, iov, 2) };
+    if (iovReadRet < 0) {
+        ChainLogError("::readv error: {}", std::string(strerror(errno)));
+        return -1;
+    }
+
+    if (iovReadRet > this->canWriteableDirection()) {
+        size_t overRead { iovReadRet - this->canWriteableDirection() };
+        this->writeStartPosition_ = this->buff_.size();
+        this->append(tmpBuff, overRead);
+    } else {
+        this->writeStartPosition_ += iovReadRet;
+    }
+
+    return iovReadRet;
 }

@@ -2,6 +2,7 @@
 #define CHAINING_MAIN_BUFFER_HPP__
 
 #include "auxiliary/Nocopyable.hpp"
+#include "main/Handler.hpp"
 
 #include <string>
 #include <string_view>
@@ -57,6 +58,8 @@ namespace net {
 
         void append(std::string_view str);
         void append(const void* str, size_t len);
+
+        ssize_t readFromFD(Handler fd);
 
     private:
         const char* begin() const
