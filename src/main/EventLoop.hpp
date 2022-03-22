@@ -11,6 +11,8 @@
 
 namespace Chaining::net {
 
+class Channel;
+
 class EventLoop : auxiliary::nocopyable {
 public:
     EventLoop();
@@ -20,10 +22,16 @@ public:
     void assertInLoopThread();
     bool isInLoopThread();
 
+    void update(Channel* channel);
+
 private:
+    using ActivatedChannels = std::vector<Channel*>;
+
     std::thread::id threadId_;
     EpollPtr epoller_;
     std::atomic<bool> stop_;
+
+    ActivatedChannels activatedChannels_;
 };
 
 }

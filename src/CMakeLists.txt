@@ -14,16 +14,21 @@ set(MAIN_SOURCE_FILE
     main/Buffer.hpp 
     main/Buffer.cpp 
     main/Callback.hpp
+    main/Channel.hpp
+    main/Channel.cpp
     main/Epoller.hpp
     main/Epoller.cpp
+    main/Event.hpp
     main/EventLoop.hpp
     main/EventLoop.cpp
     main/http/http.hpp 
     main/http/http.cpp
+    main/Timer.hpp
+    main/Timer.cpp
     main/TimerId.hpp
     main/TimerId.cpp
-    main/Timer.hpp
-    main/Timer.cpp)
+    main/TimerQueue.hpp
+    main/TimerQueue.cpp)
 
 add_library(${PROJECT_NAME} ${AUX_SOURCE_FILES} ${MAIN_SOURCE_FILE})
 add_library(chaining::lib ALIAS ${PROJECT_NAME})

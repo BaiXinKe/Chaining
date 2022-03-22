@@ -12,6 +12,7 @@ namespace aux = Chaining::auxiliary;
 
 int main(int argc, char** argv)
 {
+
     ::system("pwd");
     auto settings = aux::settings::parserSetting("../src/settings.json");
     aux::InitLogger::initLogger(settings["logger"]);

@@ -17,7 +17,7 @@ Timer::Timer(TimerCallback timercb, IntervalUnit interval)
     : id_ {}
     , timercb_ { std::move(timercb) }
     , isRepeat_ { true }
-    , expTime_ { now() + interval_ }
+    , expTime_ { Now() + interval_ }
     , interval_ { interval_ }
     , canceled_ { false }
 {
@@ -37,13 +37,13 @@ Timer::Timer(TimerCallback timercb, ExpireTime expTime, IntervalUnit interval)
 
 bool Timer::isExpired() const
 {
-    return expTime_ >= now();
+    return expTime_ >= Now();
 }
 
 void Timer::reset()
 {
     if (isRepeat() && !isCanceled()) {
-        expTime_ = now() + interval_;
+        expTime_ = Now() + interval_;
     } else {
         expTime_ = Timestamp {};
     }
