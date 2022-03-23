@@ -104,6 +104,9 @@ namespace net {
         void ensureCapacity(size_t size);
 
     private:
+        static constexpr char CRLF[] { "\r\n" };
+        static constexpr char CRLFDouble[] { "\r\n\r\n" };
+
         using ContentContainer = std::vector<char>;
         ContentContainer buff_;
         size_t readStartPosition_;

@@ -7,6 +7,8 @@
 #include "main/Callback.hpp"
 #include "main/TimerId.hpp"
 
+#include <memory>
+
 namespace Chaining::Time {
 
 class Timer : auxiliary::nocopyable {
@@ -44,6 +46,8 @@ private:
 
     bool canceled_;
 };
+
+using TimerPtr = std::unique_ptr<Timer>;
 
 inline bool
 operator<(const Timer& left, const Timer& right)

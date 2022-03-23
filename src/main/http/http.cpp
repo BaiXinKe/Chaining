@@ -38,7 +38,7 @@ HttpRequest::parseHeaderLine(std::string_view line)
     if (space == nullptr) {
         return ParseStatus::Error;
     }
-    space = '\0';
+    *space = '\0';
     space++;
 
     std::string method { str, ::strlen(str) };
@@ -55,6 +55,7 @@ HttpRequest::parseHeaderLine(std::string_view line)
 HttpRequest::ParseStatus
 HttpRequest::parseRequestLine(std::string_view line)
 {
+    return ParseStatus::Done;
 }
 
 //----------------------------------- Response ---------------------------------------//
@@ -149,6 +150,7 @@ HttpResponse& HttpResponse::setBody(std::string_view str)
 {
     this->body_ = str;
     useBody_ = true;
+    return *this;
 }
 
 void HttpResponse::StatusLine::Serilization(Buffer* buff)

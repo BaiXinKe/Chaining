@@ -28,7 +28,9 @@ set(MAIN_SOURCE_FILE
     main/TimerId.hpp
     main/TimerId.cpp
     main/TimerQueue.hpp
-    main/TimerQueue.cpp)
+    main/TimerQueue.cpp
+    main/WakeUp.hpp
+    main/WakeUp.cpp)
 
 add_library(${PROJECT_NAME} ${AUX_SOURCE_FILES} ${MAIN_SOURCE_FILE})
 add_library(chaining::lib ALIAS ${PROJECT_NAME})

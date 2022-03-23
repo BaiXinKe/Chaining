@@ -4,6 +4,8 @@
 #include "auxiliary/Nocopyable.hpp"
 
 #include "main/Epoller.hpp"
+#include "main/TimerQueue.hpp"
+#include "main/WakeUp.hpp"
 
 #include <atomic>
 #include <memory>
@@ -25,13 +27,22 @@ public:
     void update(Channel* channel);
 
 private:
+    void execExpiredTimesTask();
+
+private:
     using ActivatedChannels = std::vector<Channel*>;
+    using ExpirationTimers = std::vector<Time::TimerPtr>;
 
     std::thread::id threadId_;
     EpollPtr epoller_;
+    Time::TimerQueuePtr timers_;
+
     std::atomic<bool> stop_;
 
+    WakeUPPtr wake_;
+
     ActivatedChannels activatedChannels_;
+    ExpirationTimers expirationTimers_;
 };
 
 }

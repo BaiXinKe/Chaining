@@ -30,8 +30,8 @@ Epoller::Epoller(EventLoop* loop, size_t eventListSize)
     , activatedfds_(eventListSize)
 {
     if (epollfd_ < 0) {
-        ChainLogFatal("::epoll_create error in thread {} because: {}",
-            std::this_thread::get_id(), strerror(errno));
+        ChainLogFatal("::epoll_create error because: {}",
+            ::strerror(errno));
         std::terminate();
     }
 }

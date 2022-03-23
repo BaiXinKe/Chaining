@@ -17,7 +17,7 @@ public:
 
     int getEvent() const { return event_; }
     int getRevent() const { return revent_; }
-    int setRevent(int revent) { this->revent_ = revent; }
+    void setRevent(int revent) { this->revent_ = revent; }
     int fd() const { return fd_; }
 
     void enableRead()
@@ -72,6 +72,21 @@ public:
     bool isErroring() const { return isErroring_; }
 
     void handleEvent();
+
+    void setReadCallback(ReadEventCallback cb)
+    {
+        this->readcb_ = std::move(cb);
+    }
+
+    void setWriteCallback(WriteEventCallback cb)
+    {
+        this->writecb_ = std::move(cb);
+    }
+
+    void setErrorCallback(ErrorEventCallback cb)
+    {
+        this->writecb_ = std::move(cb);
+    }
 
 private:
     void update();

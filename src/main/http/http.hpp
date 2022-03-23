@@ -27,8 +27,7 @@ namespace Http {
         };
 
     public:
-        HttpRequest() = default;
-
+        HttpRequest();
         ParseStatus parseLine(std::string_view line);
 
         ~HttpRequest() = default;

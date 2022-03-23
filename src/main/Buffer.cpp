@@ -11,6 +11,9 @@ constexpr size_t Buffer::INIT_BUFFER_SIZE;
 constexpr size_t Buffer::DEFAULT_PREPEND_SIZE;
 constexpr double Buffer::EXPAND_FACTOR;
 
+constexpr char Buffer::CRLF[];
+constexpr char Buffer::CRLFDouble[];
+
 Buffer::Buffer(size_t initContainerSize, double expandFactor, size_t prependSize)
     : buff_(initContainerSize, '\0')
     , readStartPosition_ { prependSize }
@@ -64,7 +67,7 @@ void Buffer::reformingBuffer()
 void Buffer::retrieveUtil(const char* pos)
 {
     assert(pos > this->begin() && pos < this->begin2Write());
-    size_t retrieveSize { pos - this->begin() };
+    size_t retrieveSize { static_cast<size_t>(pos - this->begin()) };
     this->retrieve(retrieveSize);
 }
 
@@ -81,13 +84,13 @@ std::string Buffer::retrieveAsString(size_t size)
 std::string Buffer::retrieveAsStringUtil(const char* pos)
 {
     assert(pos > this->begin() && pos < this->begin2Write());
-    size_t retrieveSize { pos - this->begin() };
+    size_t retrieveSize { static_cast<size_t>(pos - this->begin()) };
     return this->retrieveAsString(retrieveSize);
 }
 
 const char* Buffer::findCRLF() const
 {
-    const char* pos = std::search(this->begin(), this->begin2Write(), "\r\n");
+    const char* pos = std::search(this->begin(), this->begin2Write(), CRLF, CRLF + 2);
     return pos != this->begin2Write() ? pos : nullptr;
 }
 
@@ -99,7 +102,7 @@ char* Buffer::findCRLF()
 
 const char* Buffer::findCRLFDouble() const
 {
-    const char* pos = std::search(this->begin(), this->begin2Write(), "\r\n\r\n");
+    const char* pos = std::search(this->begin(), this->begin2Write(), CRLFDouble, CRLFDouble + 4);
     return pos != this->begin2Write() ? pos : nullptr;
 }
 
