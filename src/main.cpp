@@ -3,21 +3,19 @@
 #include <spdlog/spdlog.h>
 #include <unistd.h>
 
-#include "auxiliary/ErrorMsg.hpp"
-#include "auxiliary/InitLogger.hpp"
-#include "auxiliary/Logger.hpp"
-#include "auxiliary/ReadSetting.hpp"
-
-namespace aux = Chaining::auxiliary;
+#include "main/EventLoop.hpp"
+#include "main/InetAddr.hpp"
+#include "main/ListenSocket.hpp"
 
 int main(int argc, char** argv)
 {
+    Chaining::net::EventLoop loop;
 
-    ::system("pwd");
-    auto settings = aux::settings::parserSetting("../src/settings.json");
-    aux::InitLogger::initLogger(settings["logger"]);
+    Chaining::net::ListenSocket socket_ { &loop, AF_INET, SOCK_STREAM, 0 };
+    Chaining::net::InetAddr addr { "0.0.0.0", 1234 };
 
-    for (int i = 0; i < 100000; i++) {
-        ChainLogInfo("Hello World");
-    }
+    socket_.bind(addr);
+    socket_.listen();
+
+    loop.loop();
 }

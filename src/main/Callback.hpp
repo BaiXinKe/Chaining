@@ -3,6 +3,9 @@
 
 #include "auxiliary/Timestamp.hpp"
 
+#include "main/Handler.hpp"
+#include "main/InetAddr.hpp"
+
 #include <functional>
 
 namespace Chaining {
@@ -15,6 +18,11 @@ namespace net {
     using ReadEventCallback = std::function<void(Time::Timestamp)>;
     using WriteEventCallback = std::function<void()>;
     using ErrorEventCallback = std::function<void()>;
+    using CloseCallback = std::function<void(Time::Timestamp)>;
+
+    using PendingTask = std::function<void()>;
+
+    using NewConnectionCallback = std::function<void(Handler fd, const InetAddr&)>;
 }
 
 };

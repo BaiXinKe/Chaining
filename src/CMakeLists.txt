@@ -1,6 +1,7 @@
 project(MainLibrary)
 
 set(AUX_SOURCE_FILES 
+    auxiliary/BlockQueue.hpp
     auxiliary/ErrorMsg.hpp 
     auxiliary/InitLogger.hpp 
     auxiliary/InitLogger.cpp 
@@ -21,8 +22,14 @@ set(MAIN_SOURCE_FILE
     main/Event.hpp
     main/EventLoop.hpp
     main/EventLoop.cpp
-    main/http/http.hpp 
-    main/http/http.cpp
+    #main/http/http.hpp 
+    #main/http/http.cpp
+    main/InetAddr.hpp
+    main/InetAddr.cpp
+    main/ListenSocket.hpp
+    main/ListenSocket.cpp
+    main/Socket.hpp
+    main/Socket.cpp
     main/Timer.hpp
     main/Timer.cpp
     main/TimerId.hpp

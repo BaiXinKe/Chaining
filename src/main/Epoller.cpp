@@ -64,6 +64,7 @@ void Epoller::fillActivatedChannels(ActivatedChannels* activatedChannels, ssize_
     for (int i = 0; i < n; i++) {
         Channel* channel = static_cast<Channel*>(activatedfds_[i].data.ptr);
         assert(channels_.find(channel->fd()) != channels_.end());
+        channel->setRevent(activatedfds_[i].events);
         activatedChannels->push_back(channel);
     }
 }

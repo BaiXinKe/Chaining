@@ -7,6 +7,8 @@
 #include "main/Event.hpp"
 #include "main/Handler.hpp"
 
+#include <memory>
+
 namespace Chaining::net {
 
 class EventLoop;
@@ -73,6 +75,12 @@ public:
 
     void handleEvent();
 
+    void tie(std::shared_ptr<void>& t)
+    {
+        tie_ = t;
+        tied_ = true;
+    }
+
     void setReadCallback(ReadEventCallback cb)
     {
         this->readcb_ = std::move(cb);
@@ -88,7 +96,15 @@ public:
         this->writecb_ = std::move(cb);
     }
 
+    void setCloseCallback(CloseCallback cb)
+    {
+        this->closecb_ = std::move(cb);
+    }
+
+    ~Channel();
+
 private:
+    void remove();
     void update();
 
 private:
@@ -101,9 +117,13 @@ private:
     bool isWriting_;
     bool isErroring_;
 
+    std::weak_ptr<void> tie_;
+    bool tied_;
+
     ReadEventCallback readcb_;
     WriteEventCallback writecb_;
     ErrorEventCallback errorcb_;
+    CloseCallback closecb_;
 
     Handler fd_;
 };

@@ -39,3 +39,10 @@ void WakeUp::handleRead()
         ChainLogError("handle Read error (Wakeup): {}", ::strerror(errno));
     }
 }
+
+WakeUp::~WakeUp()
+{
+    if (::close(fd_) == -1) {
+        ChainLogWarning("Close eventfd error: {}", strerror(errno));
+    }
+}

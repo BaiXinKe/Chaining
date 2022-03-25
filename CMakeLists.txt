@@ -22,6 +22,8 @@ add_executable(Chaining  ${SOURCE})
 
 target_include_directories(Chaining PRIVATE src)
 
+target_link_libraries(Chaining MainLibrary)
+
 
 target_compile_options(Chaining PRIVATE "-fcoroutines" )
 
