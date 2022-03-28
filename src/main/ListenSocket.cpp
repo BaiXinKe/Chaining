@@ -16,7 +16,7 @@ ListenSocket::ListenSocket(EventLoop* loop, int family, int sock_type, int proto
 {
     this->setReuseAddr();
     this->setReusePort();
-    channel_.reset(new Channel(loop, this->getHandler()));
+    channel_.reset(new Channel(loop, this->GetHandler()));
     channel_->setReadCallback([this](Time::Timestamp ts) {
         this->accept(ts);
     });
@@ -27,7 +27,7 @@ void ListenSocket::setReuseAddr()
 {
     loop_->assertInLoopThread();
     int on { 1 };
-    if (::setsockopt(this->getHandler(), SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) == -1) {
+    if (::setsockopt(this->GetHandler(), SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) == -1) {
         ChainLogError("::setsocketopt (SO_REUSEADDR) error: {}", strerror(errno));
         std::terminate();
     }
@@ -37,7 +37,7 @@ void ListenSocket::setReusePort()
 {
     loop_->assertInLoopThread();
     int on { 1 };
-    if (::setsockopt(this->getHandler(), SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on)) == -1) {
+    if (::setsockopt(this->GetHandler(), SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on)) == -1) {
         ChainLogError("::setsocketopt (SO_REUSEPORT) error: {}", strerror(errno));
         std::terminate();
     }
@@ -46,7 +46,7 @@ void ListenSocket::setReusePort()
 void ListenSocket::bind(const InetAddr& addr)
 {
     loop_->assertInLoopThread();
-    if (::bind(this->getHandler(), addr.GetSockaddr(), addr.GetSize()) == -1) {
+    if (::bind(this->GetHandler(), addr.GetSockaddr(), addr.GetSize()) == -1) {
         ChainLogFatal(GetErrorMsg(errno));
         std::terminate();
     }
@@ -55,7 +55,7 @@ void ListenSocket::bind(const InetAddr& addr)
 void ListenSocket::listen(int linq)
 {
     loop_->assertInLoopThread();
-    if (::listen(this->getHandler(), linq) == -1) {
+    if (::listen(this->GetHandler(), linq) == -1) {
         ChainLogFatal(GetErrorMsg(errno));
         std::terminate();
     }
@@ -69,10 +69,10 @@ void ListenSocket::accept(Time::Timestamp recevieTime)
     socklen_t len = sizeof(ss_);
 
     Handler ret {};
-    if ((ret = ::accept4(this->getHandler(), (sockaddr*)&ss_, &len, SOCK_NONBLOCK | SOCK_CLOEXEC)) == -1) {
+    if ((ret = ::accept4(this->GetHandler(), (sockaddr*)&ss_, &len, SOCK_NONBLOCK | SOCK_CLOEXEC)) == -1) {
         if (errno == EMFILE) {
             ::close(idlefd_);
-            idlefd_ = ::accept(this->getHandler(), NULL, NULL);
+            idlefd_ = ::accept(this->GetHandler(), NULL, NULL);
             ::close(idlefd_);
             idlefd_ = ::open("/dev/null", O_RDWR | O_CLOEXEC);
         }

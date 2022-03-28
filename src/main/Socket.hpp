@@ -9,11 +9,12 @@ namespace Chaining::net {
 class Socket : auxiliary::nocopyable {
 public:
     Socket(int family, int sock_type, int protocol, bool noblocking);
+    Socket(Handler handler);
     bool isNoblocking() const { return isNoblocking_; }
     void setNoblocking();
 
 protected:
-    Handler getHandler() const;
+    Handler GetHandler() const;
 
 private:
     Handler handler_;
