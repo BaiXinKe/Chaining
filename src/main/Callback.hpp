@@ -7,6 +7,7 @@
 #include "main/InetAddr.hpp"
 
 #include <functional>
+#include <memory>
 
 namespace Chaining {
 
@@ -23,6 +24,20 @@ namespace net {
     using PendingTask = std::function<void()>;
 
     using NewConnectionCallback = std::function<void(Handler fd, const InetAddr&)>;
+
+    // TcpConnection
+    class TcpConnection;
+    class Buffer;
+    using TcpConnectionPtr = std::shared_ptr<TcpConnection>;
+    using ConnectionCallback = std::function<void(const TcpConnectionPtr&)>;
+    using CloseCallback = std::function<void(const TcpConnectionPtr&)>;
+    using WriteCompleteCallback = std::function<void(const TcpConnectionPtr&)>;
+    using HighWaterMarkCallback = std::function<void(const TcpConnectionPtr&, size_t)>;
+
+    using MessageCallback = std::function<void(const TcpConnectionPtr&, Buffer*, Time::Timestamp)>;
+
+    void defaultConnectionCallBack(const TcpConnectionPtr& conn);
+    void defaultMessageCallback(const TcpConnectionPtr&, Buffer*, Time::Timestamp);
 }
 
 };

@@ -30,6 +30,8 @@ set(MAIN_SOURCE_FILE
     main/ListenSocket.cpp
     main/Socket.hpp
     main/Socket.cpp
+    main/TcpConnection.hpp
+    main/TcpConnection.cpp
     main/Timer.hpp
     main/Timer.cpp
     main/TimerId.hpp
